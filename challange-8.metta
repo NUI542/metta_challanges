@@ -1,38 +1,28 @@
-; Range guard
+(= (is-teen $x) 
+        (if (and (> $x 12) (< $x 20))
+            True
+            False
+        )
+)
 
-(= (is-adult $list $acc)
+(= (is-adult $x) 
+        (if (> $x 18)
+            True
+            False
+        )
+
+)
+
+(= (filter $cond $acc $list)
     (if (== (size-atom $list) 0)
         $acc
-        (let*
-            (
-                (($head $tail) (decons-atom $list))
-                ($new-acc (if (>  $head 18)
-                               (cons-atom $head $acc)
-                               $acc
-                           )
-                )
-            )
-            (is-adult $tail $new-acc)
+    (let ($head $tail) (decons-atom $list)
+        (if ($cond $head)
+            (filter $cond (cons-atom $head $acc) $tail)
+            (filter $cond $acc $tail)
         )
+    )
     )
 )
 
-(= (is-teen $list $acc)
-    (if (== (size-atom $list) 0)
-        $acc
-        (let*
-            (
-                (($head $tail) (decons-atom $list))
-                ($new-acc (if (and (>  $head 12) (< $head 20))
-                               (cons-atom $head $acc)
-                               $acc
-                           )
-                )
-            )
-            (is-teen $tail $new-acc)
-        )
-    )
-)
-
-!(is-teen (12 25 17 40) ())
-; !(is-adult (12 25 17 40) ())
+!(filter is-adult () (12 25 17 40))
